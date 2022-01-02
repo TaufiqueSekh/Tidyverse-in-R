@@ -1,0 +1,100 @@
+empId<-c(1:3)
+empName<-c("A","B","C")
+empSalary<-c(11,23,50)
+employee<-data.frame(empId,empName,empSalary)
+employee
+library(tidyverse)
+mtcars
+mtcaars_small<- mtcars[1:5,1:3]
+mtcaars_small
+
+rowSums(mtcaars_small)
+mtcaars_small %>% rowSums()
+
+hamsters <- 
+    data_frame(
+        name = c("Megan", "Amy", "Jen", "Karl", "Jeremy"),
+        gender = c("female", "female", "female", "male", "male"),
+        hamsters = c(5, 7, 6, 2, 1),
+        hamster_cages = c(2, 1, 3, 3, 4)
+    )
+ View(hamsters)  
+ 
+##Arrange
+hamsters %>% arrange(gender)
+hamsters %>% arrange(desc(hamster_cages))
+
+##Select
+ hamsters %>% select(name,hamsters)
+hamsters %>% select(-hamsters,-gender)
+##Select can also be used to rearrange the order of columns:
+hamsters %>% select(name,hamsters,gender,hamster_cages)
+##everything() is a convenient shortcut that adds all the columns that haven’t been used yet. It is very useful if you want to move a column to the front of a data frame:
+ hamsters %>% select(gender,everything()) 
+##gender will be the first column ,then rest column will apear
+
+##Filter
+hamsters %>% filter(hamsters>3)
+hamsters %>% filter(gender=="female")
+hamsters %>% filter(gender=="female" & hamsters>5)
+hamsters %>% filter(gender=="female" | hamsters>5)
+hamsters %>% filter(hamsters==1 | hamsters==5)
+
+hamsters %>% filter(hamsters %in% c(1,2,5))
+
+##Group_by
+hamsters %>% group_by(gender) %>% filter(max(hamster_cages)==3)
+
+##The n() function is a shortcut for the number of rows in the group
+hamsters %>% group_by(gender) %>% filter(n()==3)
+
+##Mutate
+hamsters %>% mutate(hamster_per_cage=hamsters/hamster_cages)
+hamsters %>% mutate(hamster_per_cage=hamsters/hamster_cages) %>% arrange(hamster_per_cage)
+
+hamsters %>% mutate(five_or_more_hamsters=hamsters>5)
+
+hamsters %>% transmute(five_or_more_hamsters=hamsters>5)
+
+hamsters %>% group_by(gender) %>% mutate(five_or_more_hamsters=hamsters>5)
+
+##Summarize
+hamsters %>% summarize(hamsters_mean=mean(hamsters),
+                      hamsters_median=median(hamsters))
+
+hamsters %>% group_by(gender)%>% summarize(hamsters_mean=mean(hamsters),
+          hamsters_median=median(hamsters),
+          count=n())
+                      
+##The power of combining verbs!
+hamsters %>% 
+arrange(hamsters) %>% 
+select(-name) %>% 
+mutate(walruses=0) %>% 
+group_by(gender) %>% 
+summarize(hamsters_mean=mean(hamsters),
+          hamsters_median=median(hamsters),
+          count=n())
+##anoter example
+hamsters %>%
+  group_by(gender) %>%
+  summarize(count=n())
+
+hamsters %>% count(gender)
+
+hamsters %>% select(starts_with("h"))
+
+hamsters %>% 
+  mutate(more_than_5_hamsters_OR_2_cages = hamsters > 5 | hamster_cages > 3)
+  
+  
+hamsters %>% 
+  mutate(more_than_5_hamsters_OR_2_cages = hamsters > 5 |             hamster_cages > 3) %>% 
+  filter(more_than_5_hamsters_OR_2_cages)
+  
+hamsters %>% 
+  arrange(hamsters) %>% 
+  group_by(gender) %>%
+  slice(2)
+  
+  
